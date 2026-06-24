@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Heat Pipe Dimension Predictor</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">HP</div>
+        <div>
+          <h1>Heat Pipe</h1>
+          <p>Inverse design predictor</p>
+        </div>
+      </div>
+
+      <section class="side-panel">
+        <h2>Model Mode</h2>
+        <label class="radio-row">
+          <input type="radio" name="mode" id="singleModeRadio" checked>
+          <span>Single prediction</span>
+        </label>
+        <label class="radio-row">
+          <input type="radio" name="mode" id="batchModeRadio">
+          <span>Batch upload</span>
+        </label>
+      </section>
+
+      <section class="status-card">
+        <span class="status-dot"></span>
+        <div>
+          <strong>Dataset loaded</strong>
+          <p id="datasetStatus">Reading experimental datapoints...</p>
+        </div>
+      </section>
+
+      <section class="side-panel compact">
+        <h2>Predicted dimensions</h2>
+        <p>Enter thermal resistance and heat input. The app estimates the remaining conditions and dimensions from similar experimental records.</p>
+      </section>
+    </aside>
+
+    <section class="workspace">
+      <header class="hero">
+        <p class="eyebrow">Research Interface</p>
+        <h2>Heat Pipe Dimension Prediction Platform</h2>
+        <p>Estimate heat-pipe geometry for a desired thermal resistance using the supplied experimental database.</p>
+      </header>
+
+      <section class="input-band">
+        <div class="tabs">
+          <button class="tab active" type="button" id="singleTab">Single Sample Prediction</button>
+          <button class="tab" type="button" id="batchTab">CSV Batch Upload</button>
+        </div>
+
+        <form id="predictForm" class="form-grid">
+          <div class="field-group wide">
+            <h3>Target Performance</h3>
+            <label>
+              <span>Thermal Resistance (K/W)</span>
+              <input id="thermalResistance" type="number" min="0.001" step="0.001" value="0.575">
+            </label>
+            <label>
+              <span>Heat Input, Q (W)</span>
+              <input id="heatInput" type="number" min="0.001" step="0.001" value="50.56">
+            </label>
+          </div>
+
+          <div class="field-group neighbor-field">
+            <h3>Model Setting</h3>
+            <label>
+              <span>Neighbor Count</span>
+              <input id="neighbors" type="number" min="3" max="50" step="1" value="12">
+            </label>
+          </div>
+
+          <div class="actions">
+            <button type="submit">Predict Dimensions</button>
+            <button type="button" id="resetBtn" class="secondary">Reset</button>
+          </div>
+        </form>
+
+        <section id="batchPanel" class="batch-panel hidden">
+          <div class="batch-controls">
+            <div>
+              <h3>CSV Batch Prediction</h3>
+              <p>Upload a CSV with columns named <strong>Thermal Resistance (K/W)</strong> and <strong>Q(W)</strong>.</p>
+            </div>
+            <label class="file-control">
+              <span>Choose CSV</span>
+              <input id="csvUpload" type="file" accept=".csv,text/csv">
+            </label>
+            <button type="button" id="downloadBatchBtn" class="secondary" disabled>Download Results</button>
+          </div>
+          <p id="batchStatus" class="batch-status">No CSV uploaded yet.</p>
+          <div class="table-wrap batch-table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Row</th>
+                  <th>R (K/W)</th>
+                  <th>Q (W)</th>
+                  <th>Angle</th>
+                  <th>FR (%)</th>
+                  <th>N</th>
+                  <th>Di</th>
+                  <th>Do</th>
+                  <th>Le</th>
+                  <th>Lc</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="batchBody"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+
+      <section class="result-grid">
+        <article class="prediction-panel">
+          <div class="section-title">
+            <div>
+              <p class="eyebrow">Prediction</p>
+              <h3>Recommended Dimensions</h3>
+            </div>
+            <span id="confidenceBadge">Waiting</span>
+          </div>
+          <div id="dimensionCards" class="dimension-cards"></div>
+          <p id="rangeWarning" class="warning"></p>
+        </article>
+
+        <article class="inferred-panel">
+          <p class="eyebrow">Estimated Inputs</p>
+          <h3>Auto-Inferred Conditions</h3>
+          <div id="inferredCards" class="inferred-cards"></div>
+        </article>
+
+        <article class="method-panel">
+          <p class="eyebrow">Model Notes</p>
+          <h3>Inverse nearest-neighbor estimator</h3>
+          <p>The app standardizes the entered thermal resistance and heat input, finds the closest experimental records, and reports inverse-distance weighted conditions and dimensions. The nearby records below provide an audit trail for each prediction.</p>
+          <dl id="modelStats"></dl>
+        </article>
+      </section>
+
+      <section class="matches-panel">
+        <div class="section-title">
+          <div>
+            <p class="eyebrow">Evidence</p>
+            <h3>Nearest Experimental Matches</h3>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Rank</th>
+                <th>R (K/W)</th>
+                <th>Q (W)</th>
+                <th>Angle</th>
+                <th>FR (%)</th>
+                <th>N</th>
+                <th>Di</th>
+                <th>Do</th>
+                <th>Le</th>
+                <th>Lc</th>
+                <th>Reference</th>
+              </tr>
+            </thead>
+            <tbody id="matchesBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script src="data.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

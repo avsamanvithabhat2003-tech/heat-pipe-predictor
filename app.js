@@ -30,9 +30,9 @@
   document.getElementById("csvUpload").addEventListener("change", handleBatchUpload);
   document.getElementById("downloadBatchBtn").addEventListener("click", downloadBatchResults);
   document.getElementById("resetBtn").addEventListener("click", () => {
-    document.getElementById("thermalResistance").value = "0.575";
-    document.getElementById("heatInput").value = "50.56";
-    document.getElementById("neighbors").value = "12";
+    document.getElementById("thermalResistance").value = "0";
+    document.getElementById("heatInput").value = "0";
+    document.getElementById("neighbors").value = "0";
     predict();
   });
 

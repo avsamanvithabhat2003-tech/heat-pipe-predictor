@@ -379,5 +379,5 @@
     URL.revokeObjectURL(url);
   }
 
-  predict();
+  //predict();
 })();

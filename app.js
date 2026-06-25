@@ -176,7 +176,6 @@
           <td>${fmt(row.do)}</td>
           <td>${fmt(row.le)}</td>
           <td>${fmt(row.lc)}</td>
-          <td title="${row.ref || "Not listed"}">${row.ref || "Not listed"}</td>
         </tr>
       `;
     }).join("");
